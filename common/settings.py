@@ -4,6 +4,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     DATABASE_URL: str
     DATABASE_SCHEMA: str = ""
+    ALLOWED_HOSTS: list = ["*"]
+    DATABASE_ECHO: bool = False
 
     model_config = SettingsConfigDict(
         env_file=".env",           # Load from .env file
