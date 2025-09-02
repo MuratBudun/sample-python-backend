@@ -53,6 +53,13 @@ python -m venv .venv
     sqlalchemy.url = sqlite:///./sql_app.db
     ```
 
+### Sample .env
+```
+DATABASE_URL=sqlite+aiosqlite:///./sql_app.db
+DATABASE_SCHEMA=
+SECRET_KEY=your_secret_key
+```
+
 ### Run
 - rename the "dev.env" file to ".env" if it is necessary.
 ```powershell

@@ -2,8 +2,8 @@ from typing import Optional, Union
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from common.security import get_password_hash
-from app.user.user_schema import UserCreate
+from common.security import get_password_hash, verify_password
+from app.user.user_schema import UserCreate, UserRead
 from app.user.user_model import User
 
 class UserService:
@@ -27,6 +27,19 @@ class UserService:
         await db.commit()
         await db.refresh(db_user)
         return db_user
+
+    async def validate_password(self, db: AsyncSession, username_or_email: str, password: str) -> Optional[UserRead]:
+        user = await self.get_user_by_username(db, username_or_email)
+        if not user:
+            user = await self.get_user_by_email(db, username_or_email)
+
+        if user is None:
+            return None
+
+        if not user or not verify_password(password, user.hashed_password):
+            return None
+        
+        return user
 
     #region get user ...
     async def get_user_by_id(self, db: AsyncSession, user_id: str) -> Optional[User]:
